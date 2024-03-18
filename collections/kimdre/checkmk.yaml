@@ -1,0 +1,10 @@
+parsers:
+  - kimdre/checkmk-logs
+scenarios:
+  - kimdre/checkmk-bf
+description: "CheckMK Authentication: parser and bruteforce detection"
+author: kimdre
+tags:
+  - linux
+  - bruteforce
+  - checkmk

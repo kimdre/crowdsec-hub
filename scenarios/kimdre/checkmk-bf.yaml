@@ -1,0 +1,38 @@
+name: kimdre/checkmk-bf
+description: "Detect bruteforce attacks on CheckMK"
+filter: "evt.Meta.log_type == 'checkmk_failed_auth'"
+type: leaky
+groupby: "evt.Meta.source_ip"
+leakspeed: "20s"
+capacity: 5
+blackhole: 1m
+debug: false
+labels:
+  service: checkmk
+  behavior: "http:bruteforce"
+  classification:
+    - attack.T1110
+  spoofable: 0
+  confidence: 3
+  label: "CheckMK Bruteforce"
+  remediation: true
+---
+type: leaky
+name: kimdre/checkmk-bf_user-enum
+description: "Detect CheckMK user enum bruteforce"
+filter: "evt.Meta.log_type == 'checkmk_failed_auth'"
+groupby: evt.Meta.source_ip
+distinct: evt.Meta.username
+leakspeed: 10s
+capacity: 5
+blackhole: 1m
+labels:
+  service: checkmk
+  behavior: "http:bruteforce"
+  spoofable: 0
+  confidence: 3
+  classification:
+    - attack.T1589
+    - attack.T1110
+  label: "CheckMK User Enumeration"
+  remediation: true

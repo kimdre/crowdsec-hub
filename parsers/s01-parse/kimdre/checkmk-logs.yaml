@@ -1,0 +1,22 @@
+onsuccess: next_stage
+filter: "evt.Parsed.program == 'checkmk'"
+name: kimdre/checkmk
+description: "Parse CheckMK Authentication Logs"
+nodes:
+  - grok:
+      pattern: '%{TIMESTAMP_ISO8601:timestamp}.*Login failed for username: %{USERNAME:username}  \(existing: .*, locked: .*, failed logins until locked: .*\), client: %{IP:source_ip}$' 
+      apply_on: message
+      statics:
+        - meta: log_type
+          value: checkmk_failed_auth
+statics:
+    - meta: log_type
+      value: checkmk_failed_auth
+    - meta: service
+      value: checkmk
+    - meta: username
+      expression: evt.Parsed.username
+    - meta: source_ip
+      expression: evt.Parsed.validIP
+    - target: evt.StrTime
+      expression: evt.Parsed.timestamp
